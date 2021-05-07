@@ -16,6 +16,7 @@ export class HomePage implements OnInit {
   walletInfos: any = [];
   coinTotal: string = "0";
   usdTotal: string = "£0.00";
+  usdTotalNumber: number;
 
 
   constructor(private navCtrl: NavController, private alertController: AlertController,
@@ -68,7 +69,7 @@ export class HomePage implements OnInit {
 
   async showGoogleConversion(){
     //I could not find a free currency coversion API
-    await Browser.open({ url: 'https://duckduckgo.com/?q=' + this.usdTotal +'+usd+in+gbp' });
+    await Browser.open({ url: 'https://duckduckgo.com/?q=' + this.usdTotalNumber +'+usd+in+gbp' });
   }
 
   async showTotals(){
@@ -76,10 +77,12 @@ export class HomePage implements OnInit {
 
     var gg = this.walletInfos.map((x) => {return wi[x["address"]]["final_balance"] / 100000000});
 
-    this.coinTotal = gg.reduce((a, b) => a + b, 0);
+    var totalCoins = gg.reduce((a, b) => a + b, 0);
+    this.coinTotal = new Intl.NumberFormat('en-US', { maximumSignificantDigits: 20 }).format(totalCoins)
     var btcUsd = await this.bitcoinBalanceService.getBtcUsd();
 
-    this.usdTotal = (+this.coinTotal * +btcUsd["price"]).toFixed(2);
+    this.usdTotalNumber = (+totalCoins * +btcUsd["price"]);
+    this.usdTotal = new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', currencyDisplay: 'symbol' }).format(this.usdTotalNumber);
   }
 
 }
