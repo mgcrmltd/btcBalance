@@ -69,7 +69,9 @@ export class HomePage implements OnInit {
 
   async showGoogleConversion(){
     //I could not find a free currency coversion API
-    await Browser.open({ url: 'https://duckduckgo.com/?q=' + this.usdTotalNumber +'+usd+in+gbp' });
+    var ccStr =  `https://www.xe.com/currencyconverter/convert/?Amount=${this.usdTotalNumber}&From=USD&To=GBP`;
+    var ddgStr = `https://duckduckgo.com/?q=${this.usdTotalNumber}+usd+in+gbp`;
+    await Browser.open({ url:  ccStr});
   }
 
   async showTotals(){

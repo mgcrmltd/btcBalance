@@ -17,6 +17,17 @@ export class BitcoinBalanceService {
     )
   }
 
+  async validateAddress(address: string) : Promise<boolean>{
+    return this.httpClient.get("https://blockchain.info/balance?active=" + address).toPromise().then(
+      x => { 
+        return true;
+      },
+      error => {
+        return false;
+      }
+    )
+  }
+
   getBtcUsd(){
     return this.httpClient.get("https://api.binance.com/api/v3/ticker/price?symbol=BTCUSDT").toPromise();
   }

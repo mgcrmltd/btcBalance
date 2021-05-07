@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { NavController } from '@ionic/angular';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import {StorageService} from '../services/storage.service';
+import {BitcoinBalanceService} from '../services/bitcoin-balance.service'
 
 @Component({
   selector: 'app-add-wallet',
@@ -22,32 +23,45 @@ export class AddWalletPage implements OnInit {
       ],
     }
 
-  constructor(private navCtrl: NavController, private storageService:StorageService) { }
+  constructor(private navCtrl: NavController, private storageService:StorageService, private btcService: BitcoinBalanceService) { }
 
   ngOnInit() {
    
     this.loginForm = new FormGroup({
       walletName : new FormControl(null, [Validators.required, Validators.minLength(3), Validators.maxLength(10)]),
-      bitcoinAddress: new FormControl(null, [Validators.required, Validators.minLength(34), Validators.maxLength(42)]),
+      bitcoinAddress: new FormControl(null, [Validators.required, Validators.minLength(34)]),
   });
   }
 
   addWallet(){
     var obj = new Object();
-    obj["name"] = this.loginForm.controls.walletName.value;
-    obj["address"] = this.loginForm.controls.bitcoinAddress.value;
+    obj["name"] = this.loginForm.controls.walletName.value.trim();
+    obj["address"] = this.loginForm.controls.bitcoinAddress.value.trim();
 
-    this.storageService.getStoredData().then(
-      x => {
-        if(x == null)
-          this.storageService.saveWallets( [obj]);
-        else{
-          x.push(obj);
-          this.storageService.saveWallets(x);
+    this.btcService.validateAddress(this.loginForm.controls.bitcoinAddress.value.trim()).then(
+      res =>{
+        if(res == false) 
+        {
+          alert('Invalid address');
         }
+        else{
+          this.storageService.getStoredData().then(
+            x => {
+              if(x == null)
+                this.storageService.saveWallets( [obj]);
+              else{
+                x.push(obj);
+                this.storageService.saveWallets(x);
+              }
+            }
+          )
+          this.navCtrl.navigateBack("/home");
+        }
+      },
+      err =>{
+        alert('Invalid address');
       }
-    )
-    this.navCtrl.navigateBack("/home");
+    );
   }
 
   cancel(){
