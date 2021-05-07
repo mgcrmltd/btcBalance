@@ -68,7 +68,7 @@ export class HomePage implements OnInit {
 
   async showGoogleConversion(){
     //I could not find a free currency coversion API
-    await Browser.open({ url: 'https://www.google.com/search?q=' + this.usdTotal +'+usd+in+gbp' });
+    await Browser.open({ url: 'https://duckduckgo.com/?q=' + this.usdTotal +'+usd+in+gbp' });
   }
 
   async showTotals(){
