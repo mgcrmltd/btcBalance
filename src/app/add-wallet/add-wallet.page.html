@@ -1,0 +1,34 @@
+<ion-header>
+  <ion-toolbar color="primary">
+    <ion-title >AddWallet</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+  <form  [formGroup]="loginForm" (ngSubmit)="addWallet()">
+    <ion-item>
+      <ion-label  style="color: lightgrey; font-size: smaller;" position="floating">Enter Wallet Name <ion-text color="danger">*</ion-text></ion-label>
+      <ion-input required formControlName="walletName" type="text"></ion-input>
+    </ion-item>
+    <ng-container *ngFor="let validation of validation_messages.walletName">
+      <div style="color: red; font-size:small;" *ngIf="loginForm.get('walletName').hasError(validation.type) && (loginForm.get('walletName').dirty || loginForm.get('walletName').touched)">
+        {{ validation.message }}
+      </div>
+    </ng-container>
+    <ion-item>
+      <ion-label style="color: lightgrey; font-size: smaller;"  position="floating">Enter Bitcoin Address <ion-text color="danger">*</ion-text></ion-label>
+      <ion-input required formControlName="bitcoinAddress" type="text"></ion-input>
+    </ion-item>
+    <ng-container *ngFor="let validation of validation_messages.bitcoinAddress">
+      <div style="color: red; font-size:small;" *ngIf="loginForm.get('bitcoinAddress').hasError(validation.type) && (loginForm.get('bitcoinAddress').dirty || loginForm.get('bitcoinAddress').touched)">
+        {{ validation.message }}
+      </div>
+    </ng-container>
+    <ion-button block color="primary" type="submit" [disabled]="loginForm.invalid" expand="block" fill="clear" shape="round">
+      Add Wallet
+    </ion-button>
+    <ion-button (click)="cancel()" expand="block" fill="clear" shape="round">
+      Cancel
+    </ion-button>
+  </form>
+</ion-content>

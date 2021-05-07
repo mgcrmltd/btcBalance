@@ -1,20 +1,44 @@
 <ion-header [translucent]="true">
-  <ion-toolbar>
-    <ion-title>
-      Blank
-    </ion-title>
+  <ion-toolbar color="primary">
+    <ion-item color="primary">
+      <ion-title slot="start">
+        Bitcoin Balance
+      </ion-title>
+      <ion-icon slot="end" name="add-circle" (click)="addWallet()"></ion-icon>
+    </ion-item>
   </ion-toolbar>
 </ion-header>
 
 <ion-content [fullscreen]="true">
-  <ion-header collapse="condense">
-    <ion-toolbar>
-      <ion-title size="large">Blank</ion-title>
-    </ion-toolbar>
-  </ion-header>
+  <ion-list #scheduleList [hidden]="shownSessions === 0">
 
-  <div id="container">
-    <strong>Ready to create an app?</strong>
-    <p>Start with Ionic <a target="_blank" rel="noopener noreferrer" href="https://ionicframework.com/docs/components">UI Components</a></p>
-  </div>
+      <ion-item-sliding  *ngFor="let walletInfo of walletInfos" >
+        <ion-item (click)="showDetails(walletInfo)">
+          <ion-label>
+            <h3>{{walletInfo.name}}</h3>
+            <p>
+              {{walletInfo.address}}
+            </p>
+          </ion-label>
+        </ion-item>
+        <ion-item-options>
+          <ion-item-option color="danger" (click)="delete(walletInfo)">
+            Remove
+          </ion-item-option>
+        </ion-item-options>
+      </ion-item-sliding>
+
+      
+          <ion-item color="light" >
+            <ion-label >{{coinTotal}} BTC</ion-label>
+          </ion-item>
+    
+          <ion-item color="light">
+            <ion-label >${{usdTotal}}</ion-label>
+            <ion-icon slot="end" name="logo-google" (click)="showGoogleConversion()"></ion-icon>
+          </ion-item>
+          <ion-button (click)="updateWallets()" expand="block" fill="clear" shape="round">
+            Refresh
+          </ion-button>
+  </ion-list>
 </ion-content>
